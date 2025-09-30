@@ -1,173 +1,105 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Painel SEUNEGOCIO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; margin: 0; background: #f9f9f9; }
-    header { background: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    nav { background: #555; padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    nav button, .actions button { background: #eee; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; }
-    .tab { display: none; padding: 20px; }
-    .active { display: block; }
-    .actions { text-align: center; margin: 20px; }
-    textarea { width: 100%; height: 200px; margin-top: 10px; }
-    @media (max-width: 600px) {
-      nav button, .actions button { width: 100%; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="painel.css" />
 </head>
 <body>
 
 <header>
   <h1>Painel SEUNEGOCIO</h1>
-  <div class="meta">Gerenciador online</div>
+  <nav id="menu">
+    <button data-tab="dashboard">Dashboard</button>
+    <button data-tab="produtos">Produtos</button>
+    <button data-tab="clientes">Clientes</button>
+    <button data-tab="cupons">Cupons</button>
+    <button data-tab="publicidade">Publicidade</button>
+    <button data-tab="keys">Keys</button>
+    <button data-tab="customizar">Customizar</button>
+    <button data-tab="config">Config</button>
+  </nav>
 </header>
 
-<nav id="tabs"></nav>
+<main>
+  <section id="dashboard" class="tab active">
+    <h2>Resumo</h2>
+    <p>Total de Vendas: R$ <span id="totalVendas"></span></p>
+    <p>Total de Pedidos: <span id="totalPedidos"></span></p>
+    <p>Produto Mais Vendido: <span id="maisVendido"></span></p>
+    <div id="graficos"></div>
+    <div id="relatorioVendas">
+      <label>Período:</label>
+      <select id="periodo">
+        <option value="7">Últimos 7 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="custom">Selecionar período</option>
+      </select>
+      <input type="date" id="dataInicio" />
+      <input type="date" id="dataFim" />
+    </div>
+    <h3>Pedidos Recentes</h3>
+    <table id="pedidosRecentes">
+      <thead><tr><th>ID</th><th>Data</th><th>Cliente</th><th>Total</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-<div id="panelRoot">
-  <div id="dashboard" class="tab active">Bem-vindo ao painel SEUNEGOCIO!</div>
-  <div id="clients" class="tab"><h3>Clientes</h3><textarea id="clientesData"></textarea></div>
-  <div id="products" class="tab"><h3>Produtos</h3><textarea id="produtosData"></textarea></div>
-  <div id="team" class="tab"><h3>Equipe</h3><textarea id="equipeData"></textarea></div>
-  <div id="coupons" class="tab"><h3>Cupons</h3><textarea id="cuponsData"></textarea></div>
-  <div id="ads" class="tab"><h3>Publicidade</h3><textarea id="adsData"></textarea></div>
-  <div id="preview" class="tab"><h3>Pré-visualização</h3><div id="previewContent"></div></div>
-  <div id="settings" class="tab"><h3>Configurações</h3><textarea id="configData"></textarea></div>
-</div>
+  <section id="produtos" class="tab">
+    <h2>Gerenciar Produtos</h2>
+    <!-- Campos de categoria, subcategoria, tipo, preço, estoque, promoções -->
+  </section>
 
-<div class="actions">
-  <button onclick="salvar()">💾 Salvar</button>
-  <button onclick="importar()">📥 Importar</button>
-  <button onclick="exportar()">📤 Exportar</button>
-  <button onclick="publicar()">🌐 Publicar</button>
-</div>
+  <section id="clientes" class="tab">
+    <h2>Cadastro de Pessoas</h2>
+    <!-- Campos de nome, telefone, endereço, notificações -->
+  </section>
 
-<script>
-  const TABS = [
-    {id:'dashboard', label:'Dashboard'},
-    {id:'clients', label:'Clientes'},
-    {id:'products', label:'Produtos'},
-    {id:'team', label:'Equipe'},
-    {id:'coupons', label:'Cupons'},
-    {id:'ads', label:'Publicidade'},
-    {id:'preview', label:'Pré-visualizar'},
-    {id:'settings', label:'Config'}
-  ];
+  <section id="cupons" class="tab">
+    <h2>Criar Cupom</h2>
+    <!-- Campos de valor, desconto, validade, mensagem -->
+  </section>
 
-  const BIN_ID = "68db6557ae596e708f00b490";
-  const API_KEY = "$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG";
+  <section id="publicidade" class="tab">
+    <h2>Gerenciar Publicidade</h2>
+    <!-- Splash, banner, carrossel -->
+  </section>
 
-  function buildTabs() {
-    const nav = document.getElementById('tabs');
-    TABS.forEach(tab => {
-      const btn = document.createElement('button');
-      btn.textContent = tab.label;
-      btn.onclick = () => activateTab(tab.id);
-      nav.appendChild(btn);
-    });
-  }
+  <section id="keys" class="tab">
+    <h2>📇 Dados Institucionais</h2>
+    <!-- Nome da loja, telefone, PIX, banco, endereço, logo, mensagem -->
+    <h2>🕒 Horários e Cobertura</h2>
+    <!-- Dias, horários, bairros, taxas -->
+    <h2>Motoboys</h2>
+    <!-- Nome, celular, disponibilidade, ativo -->
+    <h2>Painel de Escala</h2>
+    <!-- Dia, turno, funcionário -->
+  </section>
 
-  function activateTab(id) {
-    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (id === 'preview') renderPreview();
-  }
+  <section id="customizar" class="tab">
+    <h2>🎨 Visual e Layout</h2>
+    <!-- Cores, fontes, fundo, tempo estimado -->
+    <h2>🔔 Notificações Internas</h2>
+    <!-- Evento, canal, mensagem, ativar -->
+    <h2>🔐 Segurança e Controle</h2>
+    <!-- Loja aberta, login, senha mestre, tempo de inatividade -->
+    <h2>🖨️ Impressoras Térmicas</h2>
+    <!-- Tipo, layout, teste -->
+    <h2>🎧 Música de Fundo</h2>
+    <input type="text" id="musicaFundo" placeholder="Link do YouTube ou Spotify" />
+  </section>
 
-  function getDados() {
-    return {
-      clientes: document.getElementById('clientesData').value,
-      produtos: document.getElementById('produtosData').value,
-      equipe: document.getElementById('equipeData').value,
-      cupons: document.getElementById('cuponsData').value,
-      ads: document.getElementById('adsData').value,
-      config: document.getElementById('configData').value
-    };
-  }
+  <section id="config" class="tab">
+    <h2>Configurações Gerais</h2>
+    <!-- JSONBIN, idioma, som, animações, modo escuro -->
+    <button onclick="salvar()">💾 Salvar</button>
+    <button onclick="publicar()">🌐 Publicar</button>
+    <button onclick="exportar()">📤 Exportar</button>
+    <button onclick="importar()">📥 Importar</button>
+  </section>
+</main>
 
-  function carregarDados(dados) {
-    document.getElementById('clientesData').value = dados.clientes || "";
-    document.getElementById('produtosData').value = dados.produtos || "";
-    document.getElementById('equipeData').value = dados.equipe || "";
-    document.getElementById('cuponsData').value = dados.cupons || "";
-    document.getElementById('adsData').value = dados.ads || "";
-    document.getElementById('configData').value = dados.config || "";
-  }
-
-  function salvar() {
-    const dados = getDados();
-    fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY
-      },
-      body: JSON.stringify(dados)
-    })
-    .then(res => res.json())
-    .then(() => alert("Dados salvos com sucesso!"));
-  }
-
-  function importar() {
-    fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': API_KEY }
-    })
-    .then(res => res.json())
-    .then(json => carregarDados(json.record));
-  }
-
-  function exportar() {
-    const dados = getDados();
-    const blob = new Blob([JSON.stringify(dados, null, 2)], {type: "application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = "seunegocio-dados.json";
-    a.click();
-  }
-
-  function publicar() {
-    const dados = getDados();
-    const html = `
-<!DOCTYPE html>
-<html lang="pt-br">
-<head><meta charset="UTF-8"><title>SEUNEGOCIO</title></head>
-<body>
-<h1>SEUNEGOCIO</h1>
-<h2>Clientes</h2><pre>${dados.clientes}</pre>
-<h2>Produtos</h2><pre>${dados.produtos}</pre>
-<h2>Equipe</h2><pre>${dados.equipe}</pre>
-<h2>Cupons</h2><pre>${dados.cupons}</pre>
-<h2>Publicidade</h2><pre>${dados.ads}</pre>
-<h2>Configurações</h2><pre>${dados.config}</pre>
-</body></html>`;
-    const blob = new Blob([html], {type: "text/html"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = "total.html";
-    a.click();
-  }
-
-  function renderPreview() {
-    const dados = getDados();
-    document.getElementById('previewContent').innerHTML = `
-      <h3>Clientes</h3><pre>${dados.clientes}</pre>
-      <h3>Produtos</h3><pre>${dados.produtos}</pre>
-      <h3>Equipe</h3><pre>${dados.equipe}</pre>
-      <h3>Cupons</h3><pre>${dados.cupons}</pre>
-      <h3>Publicidade</h3><pre>${dados.ads}</pre>
-      <h3>Configurações</h3><pre>${dados.config}</pre>
-    `;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    buildTabs();
-    importar();
-  });
-</script>
-
+<script src="painel.js"></script>
 </body>
 </html>
