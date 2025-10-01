@@ -1,30 +1,179 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Totem SEUNEGOCIO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="totem.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: #fff;
+    }
+    header img {
+      max-height: 60px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    .banner {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px;
+      background: #fff;
+    }
+    .carousel img {
+      height: 150px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .produtos {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+    .produto {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .produto img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .produto h4 {
+      margin: 10px 0 5px;
+    }
+    .produto p {
+      margin: 0;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .cupons {
+      background: #ffeaa7;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+    footer a {
+      color: #1abc9c;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <img id="logo" src="" alt="Logo da Loja">
+    <h1 id="nomeLoja">Minha Loja</h1>
+  </header>
 
-<div id="splash">
-  <h1>SEUNEGOCIO</h1>
-  <p>Bem-vindo! Carregando cardápio...</p>
-</div>
+  <img id="banner" class="banner" src="" alt="Banner Principal">
 
-<main>
-  <section id="carrossel">
-    </section>
-</main>
+  <div id="carousel" class="carousel"></div>
 
-<footer>
-  <button id="retirar">🛍️ Fazer Pedido</button>
-</footer>
+  <section id="produtos" class="produtos"></section>
 
-<div id="musica">
-  </div>
+  <section id="cupons" class="cupons" style="display:none;">
+    <h2>🎟️ Promoções</h2>
+    <p id="cupomTexto"></p>
+  </section>
 
-<script src="totem.js"></script>
+  <footer>
+    <p>📍 <span id="endereco"></span></p>
+    <p>
+      <a id="instagram" href="#" target="_blank">Instagram</a> |
+      <a id="facebook" href="#" target="_blank">Facebook</a> |
+      <a id="whatsapp" href="#" target="_blank">WhatsApp</a>
+    </p>
+  </footer>
+
+  <script>
+    const BIN_ID = "68db6557ae596e708f00b490"; // mesmo do painel
+    const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+
+    async function carregarDados() {
+      try {
+        const res = await fetch(API_URL);
+        const json = await res.json();
+        const data = json.record;
+
+        // Dados da loja
+        document.getElementById("nomeLoja").textContent = data.dadosLoja?.nome || "Minha Loja";
+        document.getElementById("logo").src = data.dadosLoja?.logo || "";
+        document.getElementById("endereco").textContent = data.dadosLoja?.endereco || "";
+
+        // Banner
+        document.getElementById("banner").src = data.publicidade?.banner?.url || "";
+
+        // Carrossel
+        const carrosselDiv = document.getElementById("carousel");
+        carrosselDiv.innerHTML = "";
+        (data.publicidade?.carrossel || []).forEach(img => {
+          const el = document.createElement("img");
+          el.src = img;
+          carrosselDiv.appendChild(el);
+        });
+
+        // Produtos
+        const produtosDiv = document.getElementById("produtos");
+        produtosDiv.innerHTML = "";
+        (data.produtos || []).forEach(p => {
+          if(p.ativo){
+            const card = document.createElement("div");
+            card.className = "produto";
+            card.innerHTML = `
+              <img src="${p.imagem || ""}" alt="${p.nome}">
+              <h4>${p.nome}</h4>
+              <p>R$ ${p.preco}</p>
+            `;
+            produtosDiv.appendChild(card);
+          }
+        });
+
+        // Cupons
+        if(data.cupons && data.cupons.length > 0){
+          document.getElementById("cupons").style.display = "block";
+          document.getElementById("cupomTexto").textContent = 
+            `${data.cupons[0].codigo} - ${data.cupons[0].mensagem || ""}`;
+        }
+
+        // Redes sociais
+        if(data.publicidade){
+          document.getElementById("instagram").href = data.publicidade.instagram || "#";
+          document.getElementById("facebook").href = data.publicidade.facebook || "#";
+          document.getElementById("whatsapp").href = `https://wa.me/${data.publicidade.whatsapp || ""}`;
+        }
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+      }
+    }
+
+    carregarDados();
+    setInterval(carregarDados, 60000); // atualiza a cada 1min
+  </script>
 </body>
 </html>
