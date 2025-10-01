@@ -2,405 +2,70 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Painel SEUNEGOCIO</title>
+  <title>Painel SEUNEGOCIO (v2)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="painel.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .tab { display: none; }
-    .tab.active { display: block; }
-    body { font-family: sans-serif; margin: 0; background: #f4f4f4; }
-    header { background: #ff9800; color: white; padding: 1em; }
-    nav#menu { display: flex; flex-wrap: wrap; gap: 0.5em; margin-top: 1em; }
-    nav#menu button { background: white; border: none; padding: 0.5em 1em; border-radius: 5px; cursor: pointer; }
-    main { padding: 1em; }
-    section { margin-bottom: 2em; }
-    input, select, textarea { display: block; margin: 0.5em 0; padding: 0.5em; width: 100%; max-width: 500px; }
-    .card-metrica { background: white; padding: 1em; margin: 0.5em 0; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .dashboard-metricas { display: flex; gap: 1em; flex-wrap: wrap; }
-    .dashboard-relatorios textarea { height: 100px; }
-  </style>
 </head>
 <body>
 
 <header>
   <h1>Painel SEUNEGOCIO</h1>
   <nav id="menu">
-    <button data-tab="dashboard">📊 Dashboard</button>
-    <button data-tab="categorias">🗂️ Categorias</button>
-    <button data-tab="modovenda">⚖️ Modo de Venda</button>
-    <button data-tab="produtos">📦 Produtos</button>
-    <button data-tab="clientes">👥 Clientes</button>
-    <button data-tab="cupons">🎟️ Cupons</button>
-    <button data-tab="publicidade">📢 Publicidade</button>
-    <button data-tab="keys">🗝️ Dados da Loja</button>
-    <button data-tab="cobertura">🗺️ Cobertura</button>
-    <button data-tab="customizar">🎨 Customizar</button>
-    <button data-tab="config">⚙️ Config</button>
+    <button data-tab="dashboard">Dashboard</button>
+    <button data-tab="produtos">Produtos</button>
+    <button data-tab="customizar">Customizar</button>
+    <button data-tab="config">Config / Publicar</button>
   </nav>
 </header>
 
 <main>
-<!-- 📊 DASHBOARD -->
-<section id="dashboard" class="tab active">
-  <h2>📊 Dashboard de Vendas</h2>
-  <div class="dashboard-filtros">
-    <label>Filtrar por:</label>
-    <select id="filtroPeriodo">
-      <option value="dia">Hoje</option>
-      <option value="semana">Últimos 7 dias</option>
-      <option value="mes">Este mês</option>
-    </select>
-    <button onclick="atualizarDashboard()">🔄 Atualizar</button>
-  </div>
-  <div class="dashboard-metricas">
-    <div class="card-metrica"><h3>Total de Vendas</h3><p id="totalVendas">R$ 0,00</p></div>
-    <div class="card-metrica"><h3>Total de Pedidos</h3><p id="totalPedidos">0</p></div>
-    <div class="card-metrica"><h3>Total de Clientes</h3><p id="totalClientes">0</p></div>
-  </div>
-  <div class="dashboard-grafico">
-    <h3>Gráfico de Vendas</h3>
-    <canvas id="graficoVendas"></canvas>
-  </div>
-  <div class="dashboard-relatorios">
-    <h3>Relatórios</h3>
-    <textarea id="relatorioProdutos" placeholder="Produtos mais vendidos..."></textarea>
-    <textarea id="relatorioClientes" placeholder="Clientes mais ativos..."></textarea>
-    <textarea id="relatorioBairros" placeholder="Bairros com mais pedidos..."></textarea>
-  </div>
-</section>
+  <section id="dashboard" class="tab active">
+    <h2>Dashboard</h2>
+    <p>Esta seção pode conter gráficos e resumos de vendas no futuro.</p>
+  </section>
 
-<!-- 🗂️ CATEGORIAS E SUBCATEGORIAS -->
-<section id="categorias" class="tab">
-  <h2>🗂️ Categorias e Subcategorias</h2>
-  <input type="text" id="novaCategoria" placeholder="Nova categoria" />
-  <button onclick="criarCategoria()">➕ Criar Categoria</button>
-  <input type="text" id="novaSubcategoria" placeholder="Nova subcategoria" />
-  <select id="categoriaPai">
-    <option value="">Selecionar categoria pai</option>
-  </select>
-  <button onclick="criarSubcategoria()">➕ Criar Subcategoria</button>
-  <h3>Lista de Categorias</h3>
-  <textarea id="listaCategorias" readonly></textarea>
-</section>
+  <section id="produtos" class="tab">
+    <h2>Gerenciar Produtos</h2>
+    <div class="form-grid">
+      <input type="text" id="nomeProduto" placeholder="Nome do produto" />
+      <input type="number" id="precoProduto" placeholder="Preço (ex: 19.9)" step="0.01" />
+      <input type="text" id="imagemProduto" placeholder="URL da imagem" />
+      <textarea id="descricaoProduto" placeholder="Descrição detalhada"></textarea>
+      <button id="btnAddProduto">➕ Adicionar Produto</button>
+    </div>
+    <hr>
+    <h3>Lista de Produtos para Publicar</h3>
+    <div id="listaProdutos" class="product-list">
+      </div>
+  </section>
 
-<!-- ⚖️ MODO DE VENDA -->
-<section id="modovenda" class="tab">
-  <h2>⚖️ Modo de Venda</h2>
-  <select id="tipoVenda">
-    <option value="">Selecionar modo</option>
-    <option value="unidade">Unidade</option>
-    <option value="kg">Kg</option>
-    <option value="lt">Litro</option>
-    <option value="m2">Metro quadrado</option>
-    <option value="combo">Combo</option>
-    <option value="meia">Meia-a-meia</option>
-    <option value="peso">Peso</option>
-  </select>
-  <input type="text" id="fracaoVenda" placeholder="Fração (ex: ½ pizza, ¼ porção)" />
-  <button onclick="salvarModoVenda()">💾 Salvar Modo</button>
-</section>
-<section id="produtos" class="tab">
-  <h2>📦 Gerenciar Produtos</h2>
-  <input type="text" placeholder="Nome do produto" />
-  <input type="text" placeholder="Preço (R$)" />
-  <input type="text" placeholder="URL da imagem" />
-  <textarea placeholder="Descrição do produto"></textarea>
-  <select>
-    <option value="">Categoria</option>
-    <!-- categorias dinâmicas -->
-  </select>
-  <select>
-    <option value="">Subcategoria</option>
-    <!-- subcategorias dinâmicas -->
-  </select>
-  <select>
-    <option value="">Modo de venda</option>
-    <option value="unidade">Unidade</option>
-    <option value="kg">Kg</option>
-    <option value="lt">Litro</option>
-    <option value="m2">Metro quadrado</option>
-    <option value="combo">Combo</option>
-    <option value="meia">Meia-a-meia</option>
-    <option value="peso">Peso</option>
-  </select>
-  <input type="text" placeholder="Fração (ex: ½ pizza)" />
-  <input type="number" placeholder="Estoque disponível" />
-  <label><input type="checkbox" /> Produto ativo</label>
-  <label><input type="checkbox" /> Destaque na vitrine</label>
-  <button>➕ Criar Produto</button>
-  <button>✏️ Editar Produto</button>
-  <button>🗑️ Excluir Produto</button>
-  <h3>Lista de Produtos</h3>
-  <textarea placeholder="Produtos cadastrados aparecerão aqui..." readonly></textarea>
-</section>
-<section id="keys" class="tab">
-  <h2>🗝️ Dados da Loja</h2>
-  <input type="text" placeholder="Nome da loja" />
-  <input type="text" placeholder="Telefone comercial" />
-  <input type="text" placeholder="Chave PIX" />
-  <input type="text" placeholder="Banco / Agência / Conta" />
-  <input type="text" placeholder="Endereço completo" />
-  <input type="text" placeholder="URL do logo da loja" />
-  <textarea placeholder="Mensagem institucional ou slogan"></textarea>
+  <section id="customizar" class="tab">
+    <h2>Visual do Totem</h2>
+    <label for="corPrincipal">Cor Principal dos Botões</label>
+    <input type="color" id="corPrincipal" value="#0078D4"/>
+    <label for="modoEscuro">Ativar Modo Escuro</label>
+    <input type="checkbox" id="modoEscuro" />
+    <hr>
+    <h2>Música Ambiente</h2>
+    <input type="text" id="musicaFundo" placeholder="Link do YouTube (embed)" />
+    <label for="musicaAtiva">Ativar música de fundo</label>
+    <input type="checkbox" id="musicaAtiva" />
+  </section>
 
-  <h3>Horários de Funcionamento</h3>
-  <input type="text" placeholder="Dias da semana (ex: Seg a Dom)" />
-  <input type="text" placeholder="Horário (ex: 10h às 22h)" />
-</section>
-<section id="motoboys" class="tab">
-  <h2>🛵 Motoboys</h2>
-  <input type="text" placeholder="Nome do motoboy" />
-  <input type="text" placeholder="Celular do motoboy" />
-  <label><input type="checkbox" /> Disponível</label>
-  <label><input type="checkbox" /> Ativo</label>
-  <button>➕ Cadastrar Motoboy</button>
-  <button>✏️ Editar Motoboy</button>
-  <button>🗑️ Excluir Motoboy</button>
-</section>
-<section id="cobertura" class="tab">
-  <h2>🗺️ Cobertura de Entrega</h2>
-  <input type="text" placeholder="Nome do bairro" />
-  <input type="text" placeholder="Taxa de entrega (R$)" />
-  <input type="text" placeholder="Tempo estimado (min)" />
-  <select>
-    <option value="">Motoboy responsável</option>
-    <!-- nomes dinâmicos -->
-  </select>
-  <button>➕ Cadastrar Bairro</button>
-  <button>✏️ Editar Bairro</button>
-  <button>🗑️ Excluir Bairro</button>
-  <h3>Bairros Atendidos</h3>
-  <textarea placeholder="Lista de bairros cadastrados..." readonly></textarea>
-</section>
-<section id="customizar" class="tab">
-  <h2>🎨 Customizar Visual</h2>
-  <input type="color" placeholder="Cor principal" />
-  <input type="text" placeholder="Fonte personalizada (ex: Roboto)" />
-  <input type="text"
+  <section id="config" class="tab">
+    <h2>Configurações e Publicação</h2>
+    <h3>Integração com JSONBIN</h3>
+    <p>Os dados abaixo são usados para conectar seu painel ao totem.</p>
+    <input type="text" id="binId" value="68db6557ae596e708f00b490" readonly />
+    <input type="password" id="masterKey" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" />
+    
+    <h3>Controle de Dados</h3>
+    <button id="btnPublicar">🌐 Publicar no Totem (Salvar no JSONBIN)</button>
+    <button id="btnExportar">📤 Exportar Dados (JSON)</button>
+    <label class="file-label">📥 Importar Dados (JSON) <input type="file" id="btnImportar" accept=".json" /></label>
+  </section>
+</main>
 
-
-
-
-
-
- placeholder="Imagem de fundo (URL)" />
-  <input type="text" placeholder="Tempo estimado de entrega (ex: 30 min)" />
-
-  <h3>Notificações</h3>
-  <input type="text" placeholder="Evento (ex: pedido confirmado)" />
-  <input type="text" placeholder="Canal (ex: WhatsApp, SMS)" />
-  <textarea placeholder="Mensagem de notificação"></textarea>
-  <label><input type="checkbox" /> Ativar notificações</label>
-
-  <h3>Segurança</h3>
-  <label><input type="checkbox" /> Loja aberta / modo escuro</label>
-  <input type="text" placeholder="Login de administrador" />
-  <input type="password" placeholder="Senha mestre" />
-  <input type="number" placeholder="Tempo de inatividade (min)" />
-
-  <h3>Impressora</h3>
-  <select>
-    <option value="">Tipo de impressora</option>
-    <option value="bluetooth">Bluetooth</option>
-    <option value="usb">USB</option>
-    <option value="wifi">Wi-Fi</option>
-  </select>
-  <textarea placeholder="Layout de impressão (ex: nome, itens, total...)"></textarea>
-  <button>🖨️ Testar impressão</button>
-
-  <h3>Música Ambiente</h3>
-  <input type="text" placeholder="Link do YouTube ou Spotify" />
-  <label><input type="checkbox" /> Ativar música de fundo</label>
-
-  <h3>Carrinho</h3>
-  <input type="color" placeholder="Cor do carrinho" />
-  <label><input type="checkbox" /> Ativar animações</label>
-  <label><input type="checkbox" /> Ativar som</label>
-  <textarea placeholder="Layout do carrinho (ex: itens, total, botão pagar...)"></textarea>
-</section>
-<section id="config" class="tab">
-  <h2>⚙️ Configurações Gerais</h2>
-
-  <h3>Idioma e Interface</h3>
-  <select>
-    <option value="pt">Português</option>
-    <option value="en">English</option>
-    <option value="es">Español</option>
-  </select>
-  <label><input type="checkbox" /> Som ativado</label>
-  <label><input type="checkbox" /> Animações visuais</label>
-
-  <h3>Integração com JSONBIN</h3>
-  <input type="text" value="68db6557ae596e708f00b490" readonly />
-  <input type="text" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" readonly />
-  <p>Essas chaves são usadas para salvar e carregar os dados do painel.</p>
-
-  <h3>Controle de Dados</h3>
-  <button onclick="salvar()">💾 Salvar Localmente</button>
-  <button onclick="publicar()">🌐 Publicar no JSONBIN</button>
-  <button onclick="exportar()">📤 Exportar JSON</button>
-  <button onclick="importar()">📥 Importar JSON</button>
-  <button onclick="restaurar()">⚠️ Restaurar Padrão</button>
-</section>
-<<script>
-  // Troca de abas
-  document.querySelectorAll('#menu button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.getAttribute('data-tab');
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-    });
-  });
-
-  // Atualiza gráfico do dashboard
-  function atualizarDashboard() {
-    const periodo = document.getElementById('filtroPeriodo').value;
-    const vendas = {
-      dia: [120],
-      semana: [120, 190, 300, 250, 220, 180, 90],
-      mes: Array.from({ length: 30 }, () => Math.floor(Math.random() * 300))
-    };
-    graficoVendas.data.labels = vendas[periodo].map((_, i) => `Dia ${i + 1}`);
-    graficoVendas.data.datasets[0].data = vendas[periodo];
-    graficoVendas.update();
-  }
-
-  // Gráfico Chart.js
-  const ctx = document.getElementById('graficoVendas').getContext('2d');
-  const graficoVendas = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-      datasets: [{
-        label: 'Vendas (R$)',
-        data: [120, 190, 300, 250, 220, 180, 90],
-        backgroundColor: '#ff9800'
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
-  });
-
-  // Salvar localmente
-  function salvar() {
-    const dados = coletarDados();
-    localStorage.setItem('painelDados', JSON.stringify(dados));
-    alert('Dados salvos localmente!');
-  }
-
-  // Exportar JSON
-  function exportar() {
-    const dados = coletarDados();
-    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'painel.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // Importar JSON
-  function importar() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = e => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = event => {
-        const dados = JSON.parse(event.target.result);
-        alert('Importado com sucesso! (preenchimento automático ainda será implementado)');
-        console.log(dados);
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  }
-
-  // Restaurar padrão
-  function restaurar() {
-    const senha = prompt('Digite a senha mestre para restaurar:');
-    if (senha === '1234') {
-      localStorage.removeItem('painelDados');
-      alert('Painel restaurado para padrão.');
-      location.reload();
-    } else {
-      alert('Senha incorreta.');
-    }
-  }
-
-  // Publicar no JSONBIN
-  async function publicar() {
-    const dados = coletarDados();
-    const binId = '68db6557ae596e708f00b490';
-    const apiKey = '$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG';
-    const url = `https://api.jsonbin.io/v3/b/${binId}`;
-    try {
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Access-Key': apiKey
-        },
-        body: JSON.stringify(dados)
-      });
-      if (res.ok) {
-        alert('Dados publicados com sucesso!');
-      } else {
-        alert('Erro ao publicar no JSONBIN.');
-      }
-    } catch (err) {
-      alert('Falha na conexão com JSONBIN.');
-      console.error(err);
-    }
-  }
-
-  // Coletar dados do painel
-  function coletarDados() {
-    return {
-      loja: document.querySelector('#keys input[placeholder="Nome da loja"]').value,
-      mensagem: document.querySelector('#keys textarea').value,
-      produtos: document.querySelector('#produtos textarea').value,
-      banner: document.querySelector('#publicidade input[placeholder="Texto do banner"]')?.value || '',
-      categorias: document.querySelector('#listaCategorias').value,
-      relatorios: {
-        produtos: document.getElementById('relatorioProdutos').value,
-        clientes: document.getElementById('relatorioClientes').value,
-        bairros: document.getElementById('relatorioBairros').value
-      }
-    };
-  }
-
-  // Visualizar totem em nova aba
-  function visualizarTotem() {
-    const dados = coletarDados();
-    const htmlTotem = `
-      <!DOCTYPE html>
-      <html lang="pt-br">
-      <head>
-        <meta charset="UTF-8" />
-        <title>${dados.loja}</title>
-        <link rel="stylesheet" href="totem.css" />
-      </head>
-      <body>
-        <header><h1>${dados.loja}</h1></header>
-        <main>
-          <section><h2>${dados.mensagem}</h2></section>
-          <section><h3>Produtos</h3><p>${dados.produtos}</p></section>
-          <section><h3>Banner</h3><p>${dados.banner}</p></section>
-        </main>
-        <script src="totem.js">
-    `;
-    const blob = new Blob([htmlTotem], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  }
-</script>
+<script src="painel.js"></script>
 </body>
 </html>
