@@ -27,228 +27,162 @@
 </header>
 
 <main>
-  <!-- 🧠 DASHBOARD -->
+  <!-- DASHBOARD -->
   <section id="dashboard" class="tab active">
     <h2>Resumo de Vendas</h2>
-    <p>Total de Vendas: <input type="text" placeholder="R$ 0,00" /></p>
-    <p>Total de Pedidos: <input type="number" placeholder="0" /></p>
-    <p>Produto Mais Vendido: <input type="text" placeholder="Nome do produto" /></p>
-
-    <h3>Pedidos Recentes</h3>
-    <textarea placeholder="Lista de pedidos recentes..."></textarea>
-
-    <h3>Gráfico de Vendas</h3>
-    <input type="text" placeholder="Link do gráfico ou dados" />
+    <input type="text" placeholder="Total de Vendas (R$)" />
+    <input type="number" placeholder="Total de Pedidos" />
+    <input type="text" placeholder="Produto Mais Vendido" />
+    <textarea placeholder="Pedidos Recentes..."></textarea>
   </section>
-<main>
-  <section id="dashboard" class="tab active">...</section>
-  <section id="produtos" class="tab">...</section>
-  <section id="clientes" class="tab">...</section>
-  <section id="cupons" class="tab">...</section>
-  <section id="publicidade" class="tab">...</section>
-  <section id="keys" class="tab">...</section>
-  <section id="customizar" class="tab">...</section>
-  <section id="config" class="tab">...</section>
+
+  <!-- PRODUTOS -->
+  <section id="produtos" class="tab">
+    <h2>Gerenciar Produtos</h2>
+    <input type="text" placeholder="Nome do produto" />
+    <input type="text" placeholder="Preço" />
+    <input type="text" placeholder="URL da imagem" />
+    <textarea placeholder="Descrição"></textarea>
+    <select>
+      <option value="">Categoria</option>
+      <option value="lanche">Lanche</option>
+      <option value="bebida">Bebida</option>
+    </select>
+    <select>
+      <option value="">Subcategoria</option>
+      <option value="vegano">Vegano</option>
+      <option value="infantil">Infantil</option>
+    </select>
+    <input type="number" placeholder="Estoque" />
+    <label><input type="checkbox" /> Ativo</label>
+    <label><input type="checkbox" /> Destaque</label>
+  </section>
+
+  <!-- CLIENTES -->
+  <section id="clientes" class="tab">
+    <h2>Cadastro de Cliente</h2>
+    <input type="text" placeholder="Nome completo" />
+    <input type="text" placeholder="Telefone" />
+    <input type="text" placeholder="E-mail" />
+    <input type="text" placeholder="Endereço" />
+    <input type="text" placeholder="Bairro" />
+    <input type="text" placeholder="Referência" />
+    <label><input type="checkbox" /> Receber notificações</label>
+    <textarea placeholder="Histórico de pedidos..."></textarea>
+  </section>
+
+  <!-- CUPONS -->
+  <section id="cupons" class="tab">
+    <h2>Criar Cupom</h2>
+    <input type="text" placeholder="Código do cupom" />
+    <select>
+      <option value="">Tipo de desconto</option>
+      <option value="porcentagem">Porcentagem (%)</option>
+      <option value="valor">Valor fixo (R$)</option>
+    </select>
+    <input type="number" placeholder="Valor do desconto" />
+    <input type="date" placeholder="Validade" />
+    <input type="number" placeholder="Valor mínimo para uso" />
+    <input type="number" placeholder="Limite de uso por cliente" />
+    <textarea placeholder="Mensagem promocional"></textarea>
+    <label><input type="checkbox" /> Cupom ativo</label>
+  </section>
+
+  <!-- PUBLICIDADE -->
+  <section id="publicidade" class="tab">
+    <h2>Publicidade</h2>
+    <input type="text" placeholder="Texto do banner" />
+    <input type="text" placeholder="Imagem do banner" />
+    <input type="text" placeholder="Link promocional" />
+    <textarea placeholder="Mensagem de boas-vindas"></textarea>
+    <textarea placeholder="Imagens do carrossel (URLs separadas por vírgula)"></textarea>
+  </section>
+
+  <!-- KEYS -->
+  <section id="keys" class="tab">
+    <h2>Dados da Loja</h2>
+    <input type="text" placeholder="Nome da loja" />
+    <input type="text" placeholder="Telefone" />
+    <input type="text" placeholder="PIX" />
+    <input type="text" placeholder="Banco / Agência" />
+    <input type="text" placeholder="Endereço completo" />
+    <input type="text" placeholder="URL do logo" />
+    <textarea placeholder="Mensagem institucional"></textarea>
+
+    <h2>Horários</h2>
+    <input type="text" placeholder="Dias de funcionamento" />
+    <input type="text" placeholder="Horário de atendimento" />
+    <input type="text" placeholder="Bairros atendidos" />
+    <input type="text" placeholder="Taxa de entrega" />
+
+    <h2>Motoboys</h2>
+    <input type="text" placeholder="Nome do motoboy" />
+    <input type="text" placeholder="Celular" />
+    <label><input type="checkbox" /> Disponível</label>
+    <label><input type="checkbox" /> Ativo</label>
+
+    <h2>Escala</h2>
+    <input type="text" placeholder="Dia da semana" />
+    <input type="text" placeholder="Turno" />
+    <input type="text" placeholder="Funcionário" />
+  </section>
+
+  <!-- CUSTOMIZAR -->
+  <section id="customizar" class="tab">
+    <h2>Visual</h2>
+    <input type="color" />
+    <input type="text" placeholder="Fonte personalizada" />
+    <input type="text" placeholder="Imagem de fundo" />
+    <input type="text" placeholder="Tempo estimado de entrega" />
+
+    <h2>Notificações</h2>
+    <input type="text" placeholder="Evento" />
+    <input type="text" placeholder="Canal" />
+    <textarea placeholder="Mensagem de notificação"></textarea>
+    <label><input type="checkbox" /> Ativar</label>
+
+    <h2>Segurança</h2>
+    <label><input type="checkbox" /> Modo escuro</label>
+    <input type="text" placeholder="Login de administrador" />
+    <input type="password" placeholder="Senha mestre" />
+    <input type="number" placeholder="Tempo de inatividade" />
+
+    <h2>Impressora</h2>
+    <select>
+      <option value="">Tipo</option>
+      <option value="bluetooth">Bluetooth</option>
+      <option value="usb">USB</option>
+    </select>
+    <textarea placeholder="Layout de impressão"></textarea>
+    <button>🖨️ Testar impressão</button>
+
+    <h2>Música</h2>
+    <input type="text" placeholder="Link do YouTube ou Spotify" />
+    <label><input type="checkbox" /> Ativar música</label>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="config" class="tab">
+    <h2>Configurações</h2>
+    <select>
+      <option value="pt">Português</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+    <label><input type="checkbox" /> Som ativado</label>
+    <label><input type="checkbox" /> Animações</label>
+
+    <h3>JSONBIN</h3>
+    <input type="text" value="68db6557ae596e708f00b490" readonly />
+    <input type="text" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" readonly />
+
+    <button onclick="salvar()">💾 Salvar</button>
+    <button onclick="publicar()">🌐 Publicar</button>
+    <button onclick="exportar()">📤 Exportar</button>
+    <button onclick="importar()">📥 Importar</button>
+  </section>
 </main>
-<section id="produtos" class="tab">
-  <h2>Gerenciar Produtos</h2>
 
-  <h3>Criar Novo Produto</h3>
-  <input type="text" id="nomeProduto" placeholder="Nome do produto" />
-  <input type="text" id="precoProduto" placeholder="Preço (ex: 19.90)" />
-  <input type="text" id="imagemProduto" placeholder="URL da imagem" />
-  <textarea id="descricaoProduto" placeholder="Descrição detalhada"></textarea>
-
-  <select id="categoriaProduto">
-    <option value="">Categoria</option>
-    <option value="lanche">Lanche</option>
-    <option value="bebida">Bebida</option>
-    <option value="combo">Combo</option>
-    <option value="sobremesa">Sobremesa</option>
-  </select>
-
-  <select id="subcategoriaProduto">
-    <option value="">Subcategoria</option>
-    <option value="vegano">Vegano</option>
-    <option value="infantil">Infantil</option>
-    <option value="premium">Premium</option>
-  </select>
-
-  <input type="number" id="estoqueProduto" placeholder="Estoque disponível" />
-  <label><input type="checkbox" id="ativoProduto" /> Produto ativo</label>
-  <label><input type="checkbox" id="destaqueProduto" /> Mostrar como destaque</label>
-
-  <button onclick="criarProduto()">➕ Criar Produto</button>
-  <button onclick="editarProduto()">✏️ Editar Produto</button>
-  <button onclick="excluirProduto()">🗑️ Excluir Produto</button>
-
-  <h3>Lista de Produtos</h3>
-  <textarea id="listaProdutos" placeholder="Produtos cadastrados aparecerão aqui..." readonly></textarea>
-</section>
-<section id="clientes" class="tab">
-  <h2>Gerenciar Clientes</h2>
-
-  <h3>Cadastrar Novo Cliente</h3>
-  <input type="text" id="nomeCliente" placeholder="Nome completo" />
-  <input type="text" id="telefoneCliente" placeholder="Telefone (WhatsApp)" />
-  <input type="text" id="emailCliente" placeholder="E-mail" />
-  <input type="text" id="enderecoCliente" placeholder="Endereço completo" />
-  <input type="text" id="bairroCliente" placeholder="Bairro" />
-  <input type="text" id="referenciaCliente" placeholder="Ponto de referência" />
-  <label><input type="checkbox" id="notificaCliente" /> Receber notificações</label>
-
-  <h3>Histórico de Pedidos</h3>
-  <textarea id="historicoCliente" placeholder="Pedidos anteriores, observações, fidelidade..."></textarea>
-
-  <button onclick="criarCliente()">➕ Cadastrar Cliente</button>
-  <button onclick="editarCliente()">✏️ Editar Cliente</button>
-  <button onclick="excluirCliente()">🗑️ Excluir Cliente</button>
-
-  <h3>Lista de Clientes</h3>
-  <textarea id="listaClientes" placeholder="Clientes cadastrados aparecerão aqui..." readonly></textarea>
-</section>
-<section id="cupons" class="tab">
-  <h2>Gerenciar Cupons</h2>
-
-  <h3>Criar Novo Cupom</h3>
-  <input type="text" id="codigoCupom" placeholder="Código do cupom (ex: BEMVINDO10)" />
-  
-  <select id="tipoDescontoCupom">
-    <option value="">Tipo de desconto</option>
-    <option value="porcentagem">Porcentagem (%)</option>
-    <option value="valor">Valor fixo (R$)</option>
-  </select>
-
-  <input type="number" id="valorDescontoCupom" placeholder="Valor do desconto" />
-  <input type="date" id="validadeCupom" placeholder="Validade" />
-  <input type="number" id="usoMinimoCupom" placeholder="Valor mínimo para uso (R$)" />
-  <input type="number" id="limiteUsoCupom" placeholder="Limite de uso por cliente" />
-  <textarea id="mensagemCupom" placeholder="Mensagem promocional (ex: 'Use e ganhe 10% de desconto!')"></textarea>
-  <label><input type="checkbox" id="ativoCupom" /> Cupom ativo</label>
-
-  <button onclick="criarCupom()">➕ Criar Cupom</button>
-  <button onclick="editarCupom()">✏️ Editar Cupom</button>
-  <button onclick="excluirCupom()">🗑️ Excluir Cupom</button>
-
-  <h3>Cupons Ativos</h3>
-  <textarea id="listaCupons" placeholder="Cupons cadastrados aparecerão aqui..." readonly></textarea>
-</section>
-<section id="publicidade" class="tab">
-  <h2>Gerenciar Publicidade</h2>
-
-  <h3>Banner Promocional</h3>
-  <input type="text" id="textoBanner" placeholder="Texto do banner (ex: Frete grátis hoje!)" />
-  <input type="text" id="imagemBanner" placeholder="URL da imagem do banner" />
-  <input type="text" id="linkBanner" placeholder="Link promocional (ex: página de ofertas)" />
-  <label><input type="checkbox" id="ativoBanner" /> Exibir banner na tela inicial</label>
-
-  <h3>Carrossel de Imagens</h3>
-  <textarea id="carrosselImagens" placeholder="URLs das imagens separadas por vírgula"></textarea>
-
-  <h3>Mensagem de Boas-Vindas</h3>
-  <textarea id="mensagemBoasVindas" placeholder="Mensagem que aparece ao abrir o totem"></textarea>
-
-  <h3>Campanhas Agendadas</h3>
-  <input type="text" id="nomeCampanha" placeholder="Nome da campanha" />
-  <input type="date" id="dataInicioCampanha" placeholder="Data de início" />
-  <input type="date" id="dataFimCampanha" placeholder="Data de término" />
-  <textarea id="mensagemCampanha" placeholder="Mensagem da campanha"></textarea>
-  <label><input type="checkbox" id="ativaCampanha" /> Ativar campanha</label>
-
-  <button onclick="criarCampanha()">➕ Criar Campanha</button>
-  <button onclick="editarCampanha()">✏️ Editar Campanha</button>
-  <button onclick="excluirCampanha()">🗑️ Excluir Campanha</button>
-
-  <h3>Campanhas Ativas</h3>
-  <textarea id="listaCampanhas" placeholder="Campanhas cadastradas aparecerão aqui..." readonly></textarea>
-</section>
-<section id="keys" class="tab">
-  <h2>Dados da Loja</h2>
-  <input type="text" id="nomeLoja" placeholder="Nome da loja" />
-  <input type="text" id="telefoneLoja" placeholder="Telefone comercial" />
-  <input type="text" id="pixLoja" placeholder="Chave PIX" />
-  <input type="text" id="bancoLoja" placeholder="Banco / Agência / Conta" />
-  <input type="text" id="enderecoLoja" placeholder="Endereço completo" />
-  <input type="text" id="logoLoja" placeholder="URL do logo da loja" />
-  <textarea id="mensagemInstitucional" placeholder="Mensagem institucional ou slogan"></textarea>
-
-  <h2>Horários de Funcionamento</h2>
-  <input type="text" id="diasFuncionamento" placeholder="Dias da semana (ex: Seg a Dom)" />
-  <input type="text" id="horarioFuncionamento" placeholder="Horário (ex: 10h às 22h)" />
-  <input type="text" id="bairrosAtendidos" placeholder="Bairros atendidos" />
-  <input type="text" id="taxaEntrega" placeholder="Taxa de entrega (ex: R$ 5,00)" />
-
-  <h2>Motoboys</h2>
-  <input type="text" id="nomeMotoboy" placeholder="Nome do motoboy" />
-  <input type="text" id="celularMotoboy" placeholder="Celular do motoboy" />
-  <label><input type="checkbox" id="disponivelMotoboy" /> Disponível</label>
-  <label><input type="checkbox" id="ativoMotoboy" /> Ativo</label>
-
-  <h2>Escala de Funcionários</h2>
-  <input type="text" id="diaEscala" placeholder="Dia da semana" />
-  <input type="text" id="turnoEscala" placeholder="Turno (ex: manhã, tarde, noite)" />
-  <input type="text" id="funcionarioEscala" placeholder="Nome do funcionário" />
-
-  <button onclick="salvarKeys()">💾 Salvar Dados</button>
-</section>
-<section id="customizar" class="tab">
-  <h2>Visual da Loja</h2>
-  <input type="color" id="corPrincipal" placeholder="Cor principal" />
-  <input type="text" id="fontePersonalizada" placeholder="Fonte personalizada (ex: Roboto)" />
-  <input type="text" id="imagemFundo" placeholder="URL da imagem de fundo" />
-  <input type="text" id="tempoEntrega" placeholder="Tempo estimado de entrega (ex: 30 min)" />
-
-  <h2>Notificações</h2>
-  <input type="text" id="eventoNotificacao" placeholder="Evento (ex: pedido confirmado)" />
-  <input type="text" id="canalNotificacao" placeholder="Canal (ex: WhatsApp, SMS)" />
-  <textarea id="mensagemNotificacao" placeholder="Mensagem de notificação"></textarea>
-  <label><input type="checkbox" id="ativaNotificacao" /> Ativar notificações</label>
-
-  <h2>Segurança</h2>
-  <label><input type="checkbox" id="modoEscuro" /> Loja aberta / modo escuro</label>
-  <input type="text" id="loginAdmin" placeholder="Login de administrador" />
-  <input type="password" id="senhaMestre" placeholder="Senha mestre" />
-  <input type="number" id="tempoInatividade" placeholder="Tempo de inatividade (min)" />
-
-  <h2>Impressora</h2>
-  <select id="tipoImpressora">
-    <option value="">Tipo de impressora</option>
-    <option value="bluetooth">Bluetooth</option>
-    <option value="usb">USB</option>
-    <option value="wifi">Wi-Fi</option>
-  </select>
-  <textarea id="layoutImpressao" placeholder="Layout de impressão (ex: nome, itens, total...)"></textarea>
-  <button onclick="testarImpressao()">🖨️ Testar impressão</button>
-
-  <h2>Música Ambiente</h2>
-  <input type="text" id="musicaFundo" placeholder="Link do YouTube ou Spotify" />
-  <label><input type="checkbox" id="musicaAtiva" /> Ativar música de fundo</label>
-
-  <button onclick="salvarCustomizacao()">💾 Salvar Customização</button>
-</section>
-<section id="config" class="tab">
-  <h2>Configurações Gerais</h2>
-
-  <h3>Idioma e Interface</h3>
-  <select id="idiomaSelecionado">
-    <option value="pt">Português</option>
-    <option value="en">English</option>
-    <option value="es">Español</option>
-  </select>
-  <label><input type="checkbox" id="somAtivo" /> Som ativado</label>
-  <label><input type="checkbox" id="animacoesAtivas" /> Animações visuais</label>
-
-  <h3>Integração com JSONBIN</h3>
-  <input type="text" id="binId" value="68db6557ae596e708f00b490" readonly />
-  <input type="text" id="masterKey" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" readonly />
-  <p>Essas chaves são usadas para salvar e carregar os dados do painel.</p>
-
-  <h3>Controle de Dados</h3>
-  <button onclick="salvar()">💾 Salvar Localmente</button>
-  <button onclick="publicar()">🌐 Publicar no JSONBIN</button>
-  <button onclick="exportar()">📤 Exportar JSON</button>
-  <button onclick="importar()">📥 Importar JSON</button>
-</section>
 <script src="painel.js"></script>
 </body>
-  </html>
+      </html>
