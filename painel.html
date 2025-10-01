@@ -177,7 +177,14 @@
   <h2>🎨 Customizar Visual</h2>
   <input type="color" placeholder="Cor principal" />
   <input type="text" placeholder="Fonte personalizada (ex: Roboto)" />
-  <input type="text" placeholder="Imagem de fundo (URL)" />
+  <input type="text"
+
+
+
+
+
+
+ placeholder="Imagem de fundo (URL)" />
   <input type="text" placeholder="Tempo estimado de entrega (ex: 30 min)" />
 
   <h3>Notificações</h3>
@@ -236,7 +243,7 @@
   <button onclick="importar()">📥 Importar JSON</button>
   <button onclick="restaurar()">⚠️ Restaurar Padrão</button>
 </section>
-<script>
+<<script>
   // Troca de abas
   document.querySelectorAll('#menu button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -279,39 +286,100 @@
     }
   });
 
-  // Simula salvar localmente
+  // Salvar localmente
   function salvar() {
+    const dados = coletarDados();
+    localStorage.setItem('painelDados', JSON.stringify(dados));
     alert('Dados salvos localmente!');
   }
 
   // Exportar JSON
   function exportar() {
-    alert('Exportar JSON ainda será implementado.');
+    const dados = coletarDados();
+    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'painel.json';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   // Importar JSON
   function importar() {
-    alert('Importar JSON ainda será implementado.');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = event => {
+        const dados = JSON.parse(event.target.result);
+        alert('Importado com sucesso! (preenchimento automático ainda será implementado)');
+        console.log(dados);
+      };
+      reader.readAsText(file);
+    };
+    input.click();
   }
 
   // Restaurar padrão
   function restaurar() {
     const senha = prompt('Digite a senha mestre para restaurar:');
     if (senha === '1234') {
+      localStorage.removeItem('painelDados');
       alert('Painel restaurado para padrão.');
+      location.reload();
     } else {
       alert('Senha incorreta.');
     }
   }
 
-  // Publicar e gerar totem.html
-  function publicar() {
-    const dados = {
+  // Publicar no JSONBIN
+  async function publicar() {
+    const dados = coletarDados();
+    const binId = '68db6557ae596e708f00b490';
+    const apiKey = '$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG';
+    const url = `https://api.jsonbin.io/v3/b/${binId}`;
+    try {
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Key': apiKey
+        },
+        body: JSON.stringify(dados)
+      });
+      if (res.ok) {
+        alert('Dados publicados com sucesso!');
+      } else {
+        alert('Erro ao publicar no JSONBIN.');
+      }
+    } catch (err) {
+      alert('Falha na conexão com JSONBIN.');
+      console.error(err);
+    }
+  }
+
+  // Coletar dados do painel
+  function coletarDados() {
+    return {
       loja: document.querySelector('#keys input[placeholder="Nome da loja"]').value,
       mensagem: document.querySelector('#keys textarea').value,
       produtos: document.querySelector('#produtos textarea').value,
-      banner: document.querySelector('#publicidade input[placeholder="Texto do banner"]').value
+      banner: document.querySelector('#publicidade input[placeholder="Texto do banner"]')?.value || '',
+      categorias: document.querySelector('#listaCategorias').value,
+      relatorios: {
+        produtos: document.getElementById('relatorioProdutos').value,
+        clientes: document.getElementById('relatorioClientes').value,
+        bairros: document.getElementById('relatorioBairros').value
+      }
     };
+  }
+
+  // Visualizar totem em nova aba
+  function visualizarTotem() {
+    const dados = coletarDados();
     const htmlTotem = `
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -327,12 +395,14 @@
           <section><h3>Produtos</h3><p>${dados.produtos}</p></section>
           <section><h3>Banner</h3><p>${dados.banner}</p></section>
         </main>
-        <script src="totem.js">
+        <script src="totem.js"></script>
+      </body>
+      </html>
     `;
-    console.log('Totem gerado:', htmlTotem);
-    alert('Totem gerado com sucesso! Veja no console.');
+    const blob = new Blob([htmlTotem], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
   }
 </script>
-</main>
 </body>
 </html>
