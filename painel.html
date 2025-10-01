@@ -5,9 +5,20 @@
   <title>Painel SEUNEGOCIO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="painel.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .tab { display: none; }
     .tab.active { display: block; }
+    body { font-family: sans-serif; margin: 0; background: #f4f4f4; }
+    header { background: #ff9800; color: white; padding: 1em; }
+    nav#menu { display: flex; flex-wrap: wrap; gap: 0.5em; margin-top: 1em; }
+    nav#menu button { background: white; border: none; padding: 0.5em 1em; border-radius: 5px; cursor: pointer; }
+    main { padding: 1em; }
+    section { margin-bottom: 2em; }
+    input, select, textarea { display: block; margin: 0.5em 0; padding: 0.5em; width: 100%; max-width: 500px; }
+    .card-metrica { background: white; padding: 1em; margin: 0.5em 0; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .dashboard-metricas { display: flex; gap: 1em; flex-wrap: wrap; }
+    .dashboard-relatorios textarea { height: 100px; }
   </style>
 </head>
 <body>
@@ -15,174 +26,313 @@
 <header>
   <h1>Painel SEUNEGOCIO</h1>
   <nav id="menu">
-    <button data-tab="dashboard">Dashboard</button>
-    <button data-tab="produtos">Produtos</button>
-    <button data-tab="clientes">Clientes</button>
-    <button data-tab="cupons">Cupons</button>
-    <button data-tab="publicidade">Publicidade</button>
-    <button data-tab="keys">Keys</button>
-    <button data-tab="customizar">Customizar</button>
-    <button data-tab="config">Config</button>
+    <button data-tab="dashboard">📊 Dashboard</button>
+    <button data-tab="categorias">🗂️ Categorias</button>
+    <button data-tab="modovenda">⚖️ Modo de Venda</button>
+    <button data-tab="produtos">📦 Produtos</button>
+    <button data-tab="clientes">👥 Clientes</button>
+    <button data-tab="cupons">🎟️ Cupons</button>
+    <button data-tab="publicidade">📢 Publicidade</button>
+    <button data-tab="keys">🗝️ Dados da Loja</button>
+    <button data-tab="cobertura">🗺️ Cobertura</button>
+    <button data-tab="customizar">🎨 Customizar</button>
+    <button data-tab="config">⚙️ Config</button>
   </nav>
 </header>
 
 <main>
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="tab active">
-    <h2>Resumo de Vendas</h2>
-    <input type="text" placeholder="Total de Vendas (R$)" />
-    <input type="number" placeholder="Total de Pedidos" />
-    <input type="text" placeholder="Produto Mais Vendido" />
-    <textarea placeholder="Pedidos Recentes..."></textarea>
-  </section>
-
-  <!-- PRODUTOS -->
-  <section id="produtos" class="tab">
-    <h2>Gerenciar Produtos</h2>
-    <input type="text" placeholder="Nome do produto" />
-    <input type="text" placeholder="Preço" />
-    <input type="text" placeholder="URL da imagem" />
-    <textarea placeholder="Descrição"></textarea>
-    <select>
-      <option value="">Categoria</option>
-      <option value="lanche">Lanche</option>
-      <option value="bebida">Bebida</option>
+<!-- 📊 DASHBOARD -->
+<section id="dashboard" class="tab active">
+  <h2>📊 Dashboard de Vendas</h2>
+  <div class="dashboard-filtros">
+    <label>Filtrar por:</label>
+    <select id="filtroPeriodo">
+      <option value="dia">Hoje</option>
+      <option value="semana">Últimos 7 dias</option>
+      <option value="mes">Este mês</option>
     </select>
-    <select>
-      <option value="">Subcategoria</option>
-      <option value="vegano">Vegano</option>
-      <option value="infantil">Infantil</option>
-    </select>
-    <input type="number" placeholder="Estoque" />
-    <label><input type="checkbox" /> Ativo</label>
-    <label><input type="checkbox" /> Destaque</label>
-  </section>
+    <button onclick="atualizarDashboard()">🔄 Atualizar</button>
+  </div>
+  <div class="dashboard-metricas">
+    <div class="card-metrica"><h3>Total de Vendas</h3><p id="totalVendas">R$ 0,00</p></div>
+    <div class="card-metrica"><h3>Total de Pedidos</h3><p id="totalPedidos">0</p></div>
+    <div class="card-metrica"><h3>Total de Clientes</h3><p id="totalClientes">0</p></div>
+  </div>
+  <div class="dashboard-grafico">
+    <h3>Gráfico de Vendas</h3>
+    <canvas id="graficoVendas"></canvas>
+  </div>
+  <div class="dashboard-relatorios">
+    <h3>Relatórios</h3>
+    <textarea id="relatorioProdutos" placeholder="Produtos mais vendidos..."></textarea>
+    <textarea id="relatorioClientes" placeholder="Clientes mais ativos..."></textarea>
+    <textarea id="relatorioBairros" placeholder="Bairros com mais pedidos..."></textarea>
+  </div>
+</section>
 
-  <!-- CLIENTES -->
-  <section id="clientes" class="tab">
-    <h2>Cadastro de Cliente</h2>
-    <input type="text" placeholder="Nome completo" />
-    <input type="text" placeholder="Telefone" />
-    <input type="text" placeholder="E-mail" />
-    <input type="text" placeholder="Endereço" />
-    <input type="text" placeholder="Bairro" />
-    <input type="text" placeholder="Referência" />
-    <label><input type="checkbox" /> Receber notificações</label>
-    <textarea placeholder="Histórico de pedidos..."></textarea>
-  </section>
+<!-- 🗂️ CATEGORIAS E SUBCATEGORIAS -->
+<section id="categorias" class="tab">
+  <h2>🗂️ Categorias e Subcategorias</h2>
+  <input type="text" id="novaCategoria" placeholder="Nova categoria" />
+  <button onclick="criarCategoria()">➕ Criar Categoria</button>
+  <input type="text" id="novaSubcategoria" placeholder="Nova subcategoria" />
+  <select id="categoriaPai">
+    <option value="">Selecionar categoria pai</option>
+  </select>
+  <button onclick="criarSubcategoria()">➕ Criar Subcategoria</button>
+  <h3>Lista de Categorias</h3>
+  <textarea id="listaCategorias" readonly></textarea>
+</section>
 
-  <!-- CUPONS -->
-  <section id="cupons" class="tab">
-    <h2>Criar Cupom</h2>
-    <input type="text" placeholder="Código do cupom" />
-    <select>
-      <option value="">Tipo de desconto</option>
-      <option value="porcentagem">Porcentagem (%)</option>
-      <option value="valor">Valor fixo (R$)</option>
-    </select>
-    <input type="number" placeholder="Valor do desconto" />
-    <input type="date" placeholder="Validade" />
-    <input type="number" placeholder="Valor mínimo para uso" />
-    <input type="number" placeholder="Limite de uso por cliente" />
-    <textarea placeholder="Mensagem promocional"></textarea>
-    <label><input type="checkbox" /> Cupom ativo</label>
-  </section>
+<!-- ⚖️ MODO DE VENDA -->
+<section id="modovenda" class="tab">
+  <h2>⚖️ Modo de Venda</h2>
+  <select id="tipoVenda">
+    <option value="">Selecionar modo</option>
+    <option value="unidade">Unidade</option>
+    <option value="kg">Kg</option>
+    <option value="lt">Litro</option>
+    <option value="m2">Metro quadrado</option>
+    <option value="combo">Combo</option>
+    <option value="meia">Meia-a-meia</option>
+    <option value="peso">Peso</option>
+  </select>
+  <input type="text" id="fracaoVenda" placeholder="Fração (ex: ½ pizza, ¼ porção)" />
+  <button onclick="salvarModoVenda()">💾 Salvar Modo</button>
+</section>
+<section id="produtos" class="tab">
+  <h2>📦 Gerenciar Produtos</h2>
+  <input type="text" placeholder="Nome do produto" />
+  <input type="text" placeholder="Preço (R$)" />
+  <input type="text" placeholder="URL da imagem" />
+  <textarea placeholder="Descrição do produto"></textarea>
+  <select>
+    <option value="">Categoria</option>
+    <!-- categorias dinâmicas -->
+  </select>
+  <select>
+    <option value="">Subcategoria</option>
+    <!-- subcategorias dinâmicas -->
+  </select>
+  <select>
+    <option value="">Modo de venda</option>
+    <option value="unidade">Unidade</option>
+    <option value="kg">Kg</option>
+    <option value="lt">Litro</option>
+    <option value="m2">Metro quadrado</option>
+    <option value="combo">Combo</option>
+    <option value="meia">Meia-a-meia</option>
+    <option value="peso">Peso</option>
+  </select>
+  <input type="text" placeholder="Fração (ex: ½ pizza)" />
+  <input type="number" placeholder="Estoque disponível" />
+  <label><input type="checkbox" /> Produto ativo</label>
+  <label><input type="checkbox" /> Destaque na vitrine</label>
+  <button>➕ Criar Produto</button>
+  <button>✏️ Editar Produto</button>
+  <button>🗑️ Excluir Produto</button>
+  <h3>Lista de Produtos</h3>
+  <textarea placeholder="Produtos cadastrados aparecerão aqui..." readonly></textarea>
+</section>
+<section id="keys" class="tab">
+  <h2>🗝️ Dados da Loja</h2>
+  <input type="text" placeholder="Nome da loja" />
+  <input type="text" placeholder="Telefone comercial" />
+  <input type="text" placeholder="Chave PIX" />
+  <input type="text" placeholder="Banco / Agência / Conta" />
+  <input type="text" placeholder="Endereço completo" />
+  <input type="text" placeholder="URL do logo da loja" />
+  <textarea placeholder="Mensagem institucional ou slogan"></textarea>
 
-  <!-- PUBLICIDADE -->
-  <section id="publicidade" class="tab">
-    <h2>Publicidade</h2>
-    <input type="text" placeholder="Texto do banner" />
-    <input type="text" placeholder="Imagem do banner" />
-    <input type="text" placeholder="Link promocional" />
-    <textarea placeholder="Mensagem de boas-vindas"></textarea>
-    <textarea placeholder="Imagens do carrossel (URLs separadas por vírgula)"></textarea>
-  </section>
+  <h3>Horários de Funcionamento</h3>
+  <input type="text" placeholder="Dias da semana (ex: Seg a Dom)" />
+  <input type="text" placeholder="Horário (ex: 10h às 22h)" />
+</section>
+<section id="motoboys" class="tab">
+  <h2>🛵 Motoboys</h2>
+  <input type="text" placeholder="Nome do motoboy" />
+  <input type="text" placeholder="Celular do motoboy" />
+  <label><input type="checkbox" /> Disponível</label>
+  <label><input type="checkbox" /> Ativo</label>
+  <button>➕ Cadastrar Motoboy</button>
+  <button>✏️ Editar Motoboy</button>
+  <button>🗑️ Excluir Motoboy</button>
+</section>
+<section id="cobertura" class="tab">
+  <h2>🗺️ Cobertura de Entrega</h2>
+  <input type="text" placeholder="Nome do bairro" />
+  <input type="text" placeholder="Taxa de entrega (R$)" />
+  <input type="text" placeholder="Tempo estimado (min)" />
+  <select>
+    <option value="">Motoboy responsável</option>
+    <!-- nomes dinâmicos -->
+  </select>
+  <button>➕ Cadastrar Bairro</button>
+  <button>✏️ Editar Bairro</button>
+  <button>🗑️ Excluir Bairro</button>
+  <h3>Bairros Atendidos</h3>
+  <textarea placeholder="Lista de bairros cadastrados..." readonly></textarea>
+</section>
+<section id="customizar" class="tab">
+  <h2>🎨 Customizar Visual</h2>
+  <input type="color" placeholder="Cor principal" />
+  <input type="text" placeholder="Fonte personalizada (ex: Roboto)" />
+  <input type="text" placeholder="Imagem de fundo (URL)" />
+  <input type="text" placeholder="Tempo estimado de entrega (ex: 30 min)" />
 
-  <!-- KEYS -->
-  <section id="keys" class="tab">
-    <h2>Dados da Loja</h2>
-    <input type="text" placeholder="Nome da loja" />
-    <input type="text" placeholder="Telefone" />
-    <input type="text" placeholder="PIX" />
-    <input type="text" placeholder="Banco / Agência" />
-    <input type="text" placeholder="Endereço completo" />
-    <input type="text" placeholder="URL do logo" />
-    <textarea placeholder="Mensagem institucional"></textarea>
+  <h3>Notificações</h3>
+  <input type="text" placeholder="Evento (ex: pedido confirmado)" />
+  <input type="text" placeholder="Canal (ex: WhatsApp, SMS)" />
+  <textarea placeholder="Mensagem de notificação"></textarea>
+  <label><input type="checkbox" /> Ativar notificações</label>
 
-    <h2>Horários</h2>
-    <input type="text" placeholder="Dias de funcionamento" />
-    <input type="text" placeholder="Horário de atendimento" />
-    <input type="text" placeholder="Bairros atendidos" />
-    <input type="text" placeholder="Taxa de entrega" />
+  <h3>Segurança</h3>
+  <label><input type="checkbox" /> Loja aberta / modo escuro</label>
+  <input type="text" placeholder="Login de administrador" />
+  <input type="password" placeholder="Senha mestre" />
+  <input type="number" placeholder="Tempo de inatividade (min)" />
 
-    <h2>Motoboys</h2>
-    <input type="text" placeholder="Nome do motoboy" />
-    <input type="text" placeholder="Celular" />
-    <label><input type="checkbox" /> Disponível</label>
-    <label><input type="checkbox" /> Ativo</label>
+  <h3>Impressora</h3>
+  <select>
+    <option value="">Tipo de impressora</option>
+    <option value="bluetooth">Bluetooth</option>
+    <option value="usb">USB</option>
+    <option value="wifi">Wi-Fi</option>
+  </select>
+  <textarea placeholder="Layout de impressão (ex: nome, itens, total...)"></textarea>
+  <button>🖨️ Testar impressão</button>
 
-    <h2>Escala</h2>
-    <input type="text" placeholder="Dia da semana" />
-    <input type="text" placeholder="Turno" />
-    <input type="text" placeholder="Funcionário" />
-  </section>
+  <h3>Música Ambiente</h3>
+  <input type="text" placeholder="Link do YouTube ou Spotify" />
+  <label><input type="checkbox" /> Ativar música de fundo</label>
 
-  <!-- CUSTOMIZAR -->
-  <section id="customizar" class="tab">
-    <h2>Visual</h2>
-    <input type="color" />
-    <input type="text" placeholder="Fonte personalizada" />
-    <input type="text" placeholder="Imagem de fundo" />
-    <input type="text" placeholder="Tempo estimado de entrega" />
+  <h3>Carrinho</h3>
+  <input type="color" placeholder="Cor do carrinho" />
+  <label><input type="checkbox" /> Ativar animações</label>
+  <label><input type="checkbox" /> Ativar som</label>
+  <textarea placeholder="Layout do carrinho (ex: itens, total, botão pagar...)"></textarea>
+</section>
+<section id="config" class="tab">
+  <h2>⚙️ Configurações Gerais</h2>
 
-    <h2>Notificações</h2>
-    <input type="text" placeholder="Evento" />
-    <input type="text" placeholder="Canal" />
-    <textarea placeholder="Mensagem de notificação"></textarea>
-    <label><input type="checkbox" /> Ativar</label>
+  <h3>Idioma e Interface</h3>
+  <select>
+    <option value="pt">Português</option>
+    <option value="en">English</option>
+    <option value="es">Español</option>
+  </select>
+  <label><input type="checkbox" /> Som ativado</label>
+  <label><input type="checkbox" /> Animações visuais</label>
 
-    <h2>Segurança</h2>
-    <label><input type="checkbox" /> Modo escuro</label>
-    <input type="text" placeholder="Login de administrador" />
-    <input type="password" placeholder="Senha mestre" />
-    <input type="number" placeholder="Tempo de inatividade" />
+  <h3>Integração com JSONBIN</h3>
+  <input type="text" value="68db6557ae596e708f00b490" readonly />
+  <input type="text" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" readonly />
+  <p>Essas chaves são usadas para salvar e carregar os dados do painel.</p>
 
-    <h2>Impressora</h2>
-    <select>
-      <option value="">Tipo</option>
-      <option value="bluetooth">Bluetooth</option>
-      <option value="usb">USB</option>
-    </select>
-    <textarea placeholder="Layout de impressão"></textarea>
-    <button>🖨️ Testar impressão</button>
+  <h3>Controle de Dados</h3>
+  <button onclick="salvar()">💾 Salvar Localmente</button>
+  <button onclick="publicar()">🌐 Publicar no JSONBIN</button>
+  <button onclick="exportar()">📤 Exportar JSON</button>
+  <button onclick="importar()">📥 Importar JSON</button>
+  <button onclick="restaurar()">⚠️ Restaurar Padrão</button>
+</section>
+<script>
+  // Troca de abas
+  document.querySelectorAll('#menu button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    });
+  });
 
-    <h2>Música</h2>
-    <input type="text" placeholder="Link do YouTube ou Spotify" />
-    <label><input type="checkbox" /> Ativar música</label>
-  </section>
+  // Atualiza gráfico do dashboard
+  function atualizarDashboard() {
+    const periodo = document.getElementById('filtroPeriodo').value;
+    const vendas = {
+      dia: [120],
+      semana: [120, 190, 300, 250, 220, 180, 90],
+      mes: Array.from({ length: 30 }, () => Math.floor(Math.random() * 300))
+    };
+    graficoVendas.data.labels = vendas[periodo].map((_, i) => `Dia ${i + 1}`);
+    graficoVendas.data.datasets[0].data = vendas[periodo];
+    graficoVendas.update();
+  }
 
-  <!-- CONFIG -->
-  <section id="config" class="tab">
-    <h2>Configurações</h2>
-    <select>
-      <option value="pt">Português</option>
-      <option value="en">English</option>
-      <option value="es">Español</option>
-    </select>
-    <label><input type="checkbox" /> Som ativado</label>
-    <label><input type="checkbox" /> Animações</label>
+  // Gráfico Chart.js
+  const ctx = document.getElementById('graficoVendas').getContext('2d');
+  const graficoVendas = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+      datasets: [{
+        label: 'Vendas (R$)',
+        data: [120, 190, 300, 250, 220, 180, 90],
+        backgroundColor: '#ff9800'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
 
-    <h3>JSONBIN</h3>
-    <input type="text" value="68db6557ae596e708f00b490" readonly />
-    <input type="text" value="$2a$10$tjnnaauKPcx3meNHOAbLnefskEWrEHoUCjB1Q0A2WdjUodgzxGpJG" readonly />
+  // Simula salvar localmente
+  function salvar() {
+    alert('Dados salvos localmente!');
+  }
 
-    <button onclick="salvar()">💾 Salvar</button>
-    <button onclick="publicar()">🌐 Publicar</button>
-    <button onclick="exportar()">📤 Exportar</button>
-    <button onclick="importar()">📥 Importar</button>
-  </section>
+  // Exportar JSON
+  function exportar() {
+    alert('Exportar JSON ainda será implementado.');
+  }
+
+  // Importar JSON
+  function importar() {
+    alert('Importar JSON ainda será implementado.');
+  }
+
+  // Restaurar padrão
+  function restaurar() {
+    const senha = prompt('Digite a senha mestre para restaurar:');
+    if (senha === '1234') {
+      alert('Painel restaurado para padrão.');
+    } else {
+      alert('Senha incorreta.');
+    }
+  }
+
+  // Publicar e gerar totem.html
+  function publicar() {
+    const dados = {
+      loja: document.querySelector('#keys input[placeholder="Nome da loja"]').value,
+      mensagem: document.querySelector('#keys textarea').value,
+      produtos: document.querySelector('#produtos textarea').value,
+      banner: document.querySelector('#publicidade input[placeholder="Texto do banner"]').value
+    };
+    const htmlTotem = `
+      <!DOCTYPE html>
+      <html lang="pt-br">
+      <head>
+        <meta charset="UTF-8" />
+        <title>${dados.loja}</title>
+        <link rel="stylesheet" href="totem.css" />
+      </head>
+      <body>
+        <header><h1>${dados.loja}</h1></header>
+        <main>
+          <section><h2>${dados.mensagem}</h2></section>
+          <section><h3>Produtos</h3><p>${dados.produtos}</p></section>
+          <section><h3>Banner</h3><p>${dados.banner}</p></section>
+        </main>
+        <script src="totem.js">
+    `;
+    console.log('Totem gerado:', htmlTotem);
+    alert('Totem gerado com sucesso! Veja no console.');
+  }
+</script>
 </main>
-
-<script src="painel.js"></script>
 </body>
-      </html>
+</html>
