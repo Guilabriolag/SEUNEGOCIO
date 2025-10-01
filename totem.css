@@ -1,9 +1,22 @@
+:root {
+  --cor-principal: #0078d4; /* Cor padrão, será alterada pelo JS */
+  --cor-fundo: #ffffff;
+  --cor-texto: #333333;
+  --cor-fundo-produto: #f9f9f9;
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #fff;
-  color: #333;
+  font-family: sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
   overflow: hidden;
+}
+
+body.dark-mode {
+  --cor-fundo: #121212;
+  --cor-texto: #ffffff;
+  --cor-fundo-produto: #1e1e1e;
 }
 
 #splash {
@@ -17,23 +30,15 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 999;
-  animation: fadeOut 3s forwards;
+  animation: fadeOut 2.5s 1s forwards;
 }
 
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
-}
-
-header {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  to { opacity: 0; visibility: hidden; }
 }
 
 main {
   display: flex;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   padding: 20px;
@@ -41,85 +46,87 @@ main {
 
 #carrossel {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   overflow-x: auto;
   scroll-behavior: smooth;
+  padding: 20px;
+  width: 100%;
 }
 
 #carrossel::-webkit-scrollbar {
-  display: none;
+  display: none; /* Esconde a barra de rolagem */
 }
 
 .produto {
-  min-width: 250px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: 15px;
-  background-color: #f9f9f9;
+  flex: 0 0 300px;
+  border-radius: 15px;
+  padding: 20px;
+  background-color: var(--cor-fundo-produto);
   text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .produto img {
-  max-width: 100%;
-  border-radius: 8px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .produto h3 {
-  margin: 10px 0 5px;
+  margin: 15px 0 5px;
+  font-size: 1.5rem;
 }
 
-.produto p {
-  margin: 5px 0;
+.produto .descricao {
+  font-size: 0.9rem;
+  color: #666;
+  flex-grow: 1; /* Faz a descrição ocupar o espaço disponível */
 }
 
-.produto button {
-  margin-top: 10px;
-  padding: 10px 15px;
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.produto .preco {
+  margin: 10px 0;
+  font-size: 1.4rem;
   font-weight: bold;
-  cursor: pointer;
-}
-
-.produto button:hover {
-  background-color: #005fa3;
 }
 
 footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #222;
-  color: white;
-  display: flex;
-  justify-content: space-around;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  text-align: center;
   padding: 15px 0;
+  border-top: 1px solid #eee;
+}
+
+body.dark-mode footer {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-top: 1px solid #333;
 }
 
 footer button {
-  background-color: #0078d4;
+  background-color: var(--cor-principal);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  transition: transform 0.2s;
 }
 
 footer button:hover {
-  background-color: #005fa3;
+  transform: scale(1.05);
 }
 
 #musica {
-  display: none;
-}
-
-#qr {
-  position: absolute;
-  bottom: 80px;
+  position: fixed;
+  bottom: 100px;
   right: 20px;
+  z-index: 100;
 }
