@@ -395,9 +395,7 @@
           <section><h3>Produtos</h3><p>${dados.produtos}</p></section>
           <section><h3>Banner</h3><p>${dados.banner}</p></section>
         </main>
-        <script src="totem.js"></script>
-      </body>
-      </html>
+        <script src="totem.js">
     `;
     const blob = new Blob([htmlTotem], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
